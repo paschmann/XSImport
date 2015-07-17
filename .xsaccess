@@ -1,0 +1,6 @@
+{
+    "exposed": true,
+    "authentication": [{
+        "method": "Form"
+    }]
+}

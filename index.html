@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <title>XS File Uploader</title>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="semantic/semantic.js"></script>
+    <script src="js/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.css">
+
+    <style type="text/css">
+        body {
+            background-color: #FFFFFF;
+        }
+        
+        .ui.inverted.menu {
+            background-color: #225378;
+        }
+        
+        .ui.menu .item img.logo {
+            margin-right: 1.5em;
+        }
+        .main.container {
+            margin-top: 7em;
+        }
+        .wireframe {
+            margin-top: 2em;
+        }
+        .ui.footer.segment {
+            margin: 5em 0em 0em;
+            padding: 5em 0em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ui fixed inverted menu">
+        <div class="ui container">
+            <div href="#" class="header item">
+                <img class="logo" src="img/XSImport_Logo.png"><b>XS</b>&nbsp;Import
+            </div>
+        </div>
+    </div>
+    <div class="ui main container">
+        <div class="twelve wide column">
+            <form id="myform" class="ui form">
+                <h4 class="ui dividing header">Table Data</h4>
+                <div class="field">
+                    <label>Schema Name:</label>
+                    <div class="one field">
+                        <div class="field">
+                            <select name="schemaname" id="schemaname"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Table Name:</label>
+                    <div class="one field">
+                        <div class="field">
+                            <select name="tablename" id="tablename"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="ui dividing header">CSV File</h4>
+                <div class="field">
+                    <label>CSV File:</label>
+                    <div class="one field">
+                        <div class="field">
+                            <div class="ui action input">
+                                <input type="file" name="filename" id="filename" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>CSV Preview Row:</label>
+                    <div class="one field">
+                        <div class="field">
+                            <input type="text" name="csvpreviewrow" id="csvpreviewrow" value="0" />
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="ui dividing header">Processing Options</h4>
+                <div class="field">
+                    <div class="one field">
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" name="nulls" id="nulls" checked>
+                                <label>Empty strings are nulls?</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="one field">
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" name="delete" id="delete">
+                                <label>Delete all table rows before insert?</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="ui dividing header">Execute</h4>
+                <button type="button" class="ui button" onClick="processFile('delete');">Delete table data</button>
+                <button type="button" class="ui button" onClick="processFile('preview');">Preview</button>
+                <button type="button" class="ui button primary" onClick="processFile('upload');">Upload File</button>
+
+                <div id="messages">&nbsp;</div>
+                <div id="tabledata">&nbsp;</div>
+            </form>
+        </div>
+    </div>
+    <br /><br />
+</body>
+
+</html>
