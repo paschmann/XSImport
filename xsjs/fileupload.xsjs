@@ -20,7 +20,7 @@ try {
         contents = $.request.body.asString();
         uploadFile();
     } else if (proc === "delete") {
-        deleteTable();
+        deleteTableData();
     } else if (proc === "init") {
         getSchemas();
         getTables();
@@ -49,7 +49,7 @@ function getTables() {
     response.tables = rs;
 }
 
-function deleteTable() {
+function deleteTableData() {
     try {
         var pstmt1 = conn.prepareStatement("DELETE FROM " + schemaname + "." + tablename);
         var rs1 = pstmt1.executeQuery();
@@ -70,6 +70,16 @@ function parseTimestamp(strDate) {
     var second = strDate.substring(12, 14);
 
     return new Date(year, month - 1, day, hour, minute, second);
+}
+
+function checkForBadData(arrLines) {
+    for (var i = 0; i < arrLines.length; i++) {
+        if (JSON.stringify(arrLines[i]).length <= 2) {
+            arrLines.splice(i, 1);
+            checkForBadData(arrLines);
+        }
+    }
+    return arrLines;
 }
 
 function previewFile() {
@@ -179,16 +189,6 @@ function previewFile() {
         messages.push("No data in the submitted file.");
     }
     return html;
-}
-
-function checkForBadData(arrLines) {
-    for (var i = 0; i < arrLines.length; i++) {
-        if (JSON.stringify(arrLines[i]).length <= 2) {
-            arrLines.splice(i, 1);
-            checkForBadData(arrLines);
-        }
-    }
-    return arrLines;
 }
 
 function uploadFile() {
