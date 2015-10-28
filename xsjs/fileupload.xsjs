@@ -101,7 +101,7 @@ function previewFile() {
         
         var line = arrLines[csvpreviewrow];
         line = line.split("\",\"");
-        var col = line.splice(0, arrLines.length + 1);
+        var col = line.splice(0, colCount);
         for (var a = 1; a <= colCount; a++) {
             var row = {};
             var colType = "";
