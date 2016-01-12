@@ -12845,7 +12845,7 @@ ul.ui.list li:before,
   top: auto;
   left: auto;
   margin-left: -1.25rem;
-  content: 'â¢';
+  content: 'Ã¢ÂÂ¢';
   opacity: 1;
   color: inherit;
   vertical-align: top;
@@ -15526,7 +15526,7 @@ ol.ui.horizontal.list li:before,
 .ui.ordered.steps .step.completed:before {
   font-family: 'Step';
   content: '\e800';
-  /* 'î ' */
+  /* 'Ã®Â Â' */
 }
 
 /*******************************

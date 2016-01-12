@@ -1,6 +1,7 @@
 try {
     var conn = $.db.getConnection();
     var filename = $.request.parameters.get("filename");
+    var batch = $.request.parameters.get("batch");
     var schemaname = $.request.parameters.get("schemaname");
     var tablename = $.request.parameters.get("tablename");
     var proc = $.request.parameters.get("process");
@@ -96,11 +97,12 @@ function previewFile() {
     }
     if (contents.length > 0) {
         var arrLines = contents.split(/\r\n|\n/);
-
+        messages.push("CSV Row count: " + arrLines.length);
         arrLines = checkForBadData(arrLines);
         
         var line = arrLines[csvpreviewrow];
         line = line.split("\",\"");
+        //var col = line.splice(0, arrLines.length + 1);
         var col = line.splice(0, colCount);
         for (var a = 1; a <= colCount; a++) {
             var row = {};
@@ -184,6 +186,7 @@ function previewFile() {
             rowData.push(row);
         }
         response.tabledata = rowData;
+        
         messages.push("Preview generated.");
     } else {
         messages.push("No data in the submitted file.");
@@ -208,16 +211,19 @@ function uploadFile() {
             pstmt = conn.prepareStatement(insertStmnt);
 
             arrLines = checkForBadData(arrLines);
-
-            pstmt.setBatchSize(arrLines.length);
-
+            
+            if (batch === "on") {
+                pstmt.setBatchSize(arrLines.length);
+            }
+            
             if (delrows === "on") {
-                deleteTable();
+                deleteTableData();
             }
 
             for (var i = 0; i < arrLines.length; i++) {
                 var line = arrLines[i].split("\",\"");
-                var col = line.splice(0, arrLines.length + 1);
+                //var col = line.splice(0, arrLines.length + 1);
+                var col = line.splice(0, colCount);
                 if (JSON.stringify(arrLines[i]).length > 2) {
                     for (var a = 1; a <= colCount; a++) {
                         var val = "";
@@ -227,7 +233,7 @@ function uploadFile() {
                             val = col[a - 1].split("\"").join("");
                             val = val.replace("\\,", ",");
                         }
-                        if (typeof val === "undefined" || (val === "" && emptyisnull === "on")) {
+                        if (typeof val === "undefined" || (val === "" && emptyisnull === "on")  || (val.toLowerCase()  === "null" && emptyisnull === "on")) {
                             pstmt.setNull(a);
                         } else {
                             switch (rsm.getColumnType(a)) {
@@ -283,10 +289,19 @@ function uploadFile() {
                             }
                         }
                     }
-                    pstmt.addBatch();
+                    
+                    if (batch === "on"){
+                        pstmt.addBatch();
+                    } else {
+                        pstmt.executeUpdate();
+                        conn.commit();
+                    }
                 }
             }
-            pstmt.executeBatch();
+            if (batch === "on"){
+                pstmt.executeBatch();
+                conn.commit();
+            }
             messages.push(arrLines.length + " Lines inserted into " + schemaname + "." + tablename + "<br />");
             messages.push(((Date.now() - startdt) / 60).toFixed(2) + " Seconds taken to complete<br />");
         } else {
