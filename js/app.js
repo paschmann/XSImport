@@ -1,3 +1,66 @@
+// -------------------------   Global Vars and Initialize ----------------------- //
+var debugmode = false;
+
+$(document).ready(function() {
+    configureClicks();
+    var tableData = {};
+    callAPI("init", "./xsjs/fileupload.xsjs?process=init", "", "");
+    
+    $( "#schemaname" ).change(function() {
+        diaplyTables($( "#schemaname" ).val());
+    });
+});
+
+// Click handlers //
+
+function configureClicks() {
+    $("#btnShowSettings").click(function(e) {
+        showSettings();
+    });
+    
+    $("#btnSideBar").click(function(e) {
+        toggleSideBar();
+    });
+}
+
+// Display nav menu, optional //
+
+function toggleSideBar(bHide){
+    if ($("#logoarea").css("display") === "block" || bHide) {
+        $("#logoarea").css("display", "none");
+        $("#main").css("margin-left", "0");
+    } else {
+        $("#logoarea").css("display", "block");
+        $("#main").css("margin-left", "270px");
+    }
+}
+
+
+// Display modal box, optional //
+
+function showSettings() {
+    $('#dialogHTML1').css('height', 'auto');
+    $('#modaldlg').css('height', 'auto');
+    $('#modaldlg').css('width', '720px');
+    $('#myModal').appendTo("body").modal('show');
+}
+
+// Loading spinner //
+
+function showLoadingSpinner(visible, strText){
+    if (visible){
+        $(".loading").css("display", "block");
+        if (debugmode !== "hidden"){
+            $("#loading-text").html(strText);
+        }
+    } else {
+        $(".loading").css("display", "none");
+    }
+}
+
+// ************************   Template functions end ***************************** //
+
+
 function callAPI(func, url, source, datatype) {
     $.ajax({
         url: url,
@@ -63,6 +126,7 @@ function displayInit(objData) {
             $('<option></option>').val(objRow.SCHEMA_NAME).html(objRow.SCHEMA_NAME)
         );
     });
+    diaplyTables($( "#schemaname" ).val());
 }
 
 function diaplyTables(schemaname) {
@@ -99,8 +163,8 @@ function displayTableData(objData) {
     html += "<th>CSV Value</th>";
     html += "<th>Column Name</th>";
     html += "<th>Column Type</th>";
-    html += "<th>Column Data Type</th>";
-    html += "<th>Column Precision</th>";
+    html += "<th>Type</th>";
+    html += "<th>Precision</th>";
     html += "<th>Column Data</th>";
     html += "</tr>";
     html += "</thead>";
@@ -120,13 +184,3 @@ function displayTableData(objData) {
     html += "</table>";
     $("#tabledata").html(html);
 }
-
-
-$(document).ready(function() {
-    var tableData = {};
-    callAPI("init", "./xsjs/fileupload.xsjs?process=init", "", "");
-    
-    $( "#schemaname" ).change(function() {
-        diaplyTables($( "#schemaname" ).val());
-    });
-});

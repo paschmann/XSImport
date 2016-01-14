@@ -1,0 +1,137 @@
+/* Left Side nav menu */
+
+#nav {
+    background-color: #1b1e24;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    transition: all 0.5s ease 0s;
+    width: 270px;
+    z-index: 2;
+}
+
+#nav-scroll {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding-bottom: 200px;
+    padding-top: 55px;
+    position: absolute;
+    width: 270px;
+}
+
+.circular-avatar-sm {
+	width: 38px;
+	height: 38px;
+        border-radius: 19px;
+	-webkit-border-radius: 19px;
+	-moz-border-radius: 19px;
+	background: url(../img/avatar.png) no-repeat;
+}
+
+.circular-avatar-bg {
+	width: 96px;
+	height: 96px;
+	margin: 12px;
+	border-radius: 48px;
+	-webkit-border-radius: 48px;
+	-moz-border-radius: 48px;
+	background: url(../img/avatar.png) no-repeat;
+}
+
+.avatar-mini {
+    width: 34px;
+}
+.avatar-slide {
+    color: #fff;
+    padding: 25px 0 0;
+    position: relative;
+}
+.avatar-slide .avatar-detail {
+    margin: 5px auto 25px;
+    padding: 5px 15px;
+    text-align: center;
+}
+.avatar-slide .avatar-detail p {
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 24px;
+}
+.avatar-slide .avatar-detail p a {
+    color: #009eff;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.avatar-slide .avatar-detail span {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 25px;
+    margin: 5px 5px 0 0;
+    padding: 1px 7px;
+}
+.avatar-slide .avatar-link {
+    margin-bottom: 1px;
+}
+.avatar-slide .avatar-link a {
+    color: #fff;
+    font-size: 16px;
+    line-height: 35px;
+    position: relative !important;
+}
+.avatar-slide .avatar-link a i {
+    height: 20px;
+    text-align: center;
+    width: 20px;
+    z-index: 3;
+}
+.avatar-slide .avatar-link a.btn {
+    background: none repeat scroll 0 0 #23272e;
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+}
+.avatar-slide .avatar-link a.btn:first-child {
+    border-left: 0 none;
+}
+
+.avatar-slide .avatar-link a em {
+    height: 14px;
+    margin-left: 5px;
+    margin-top: -4px;
+    position: absolute;
+    top: 50%;
+    width: 14px;
+}
+.avatar-slide .avatar-link a em:after {
+    background-color: #ffdd72;
+    content: "";
+    height: 8px;
+    left: 0;
+    position: absolute;
+    width: 8px;
+}
+.avatar-slide .avatar-link a em.red:after {
+    background-color: #e02222;
+}
+.avatar-slide .avatar-link a em.green:after {
+    background-color: #5bd993;
+}
+.avatar-slide .avatar-link a em:before {
+    background: none repeat scroll 0 0 transparent;
+    border: 3px solid #fff;
+    content: "";
+    height: 24px;
+    left: -8px;
+    opacity: 0;
+    position: absolute;
+    top: -8px;
+    width: 24px;
+}
+.avatar-slide .avatar-link a em.active:before {
+    animation: 2s ease-out 0s normal none infinite sonar;
+}
