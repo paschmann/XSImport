@@ -8,6 +8,7 @@ try {
     var emptyisnull = $.request.parameters.get("nulls");
     var delrows = $.request.parameters.get("delete");
     var csvpreviewrow = $.request.parameters.get("csvpreviewrow");
+    var delimeter = $.request.parameters.get("delimeter");
 
     var contents = "";
     var html = "";
@@ -38,9 +39,16 @@ try {
 
 function getSchemas() {
     var hdbconn = $.hdb.getConnection();
-    var query = 'SELECT SCHEMA_NAME FROM "SYS"."SCHEMAS" WHERE HAS_PRIVILEGES = \'TRUE\'';
+    var query = 'SELECT SCHEMA_NAME FROM "SYS"."SCHEMAS"';
     var rs = hdbconn.executeQuery(query);
     response.schemas = rs;
+}
+
+function getSelectSQL() {
+    var pstmt = conn.prepareStatement('SELECT * FROM "' + schemaname + '"."' + tablename + '" LIMIT 1');
+    var rs = pstmt.executeQuery();
+    var rsm = rs.getMetaData();
+    
 }
 
 function getTables() {
@@ -52,8 +60,8 @@ function getTables() {
 
 function deleteTableData() {
     try {
-        var pstmt1 = conn.prepareStatement("DELETE FROM " + schemaname + "." + tablename);
-        var rs1 = pstmt1.executeQuery();
+        var pstmt1 = conn.prepareStatement('DELETE FROM "' + schemaname + '"."' + tablename + '"');
+        var rs1 = pstmt1.executeUpdate();
         pstmt1.close();
         conn.commit();
         messages.push("All rows deleted from " + schemaname + "." + tablename + "</br />");
@@ -101,7 +109,8 @@ function previewFile() {
         arrLines = checkForBadData(arrLines);
         
         var line = arrLines[csvpreviewrow];
-        line = line.split("\",\"");
+        line = line.split(delimeter);
+        //line = line.split("\"" + delimeter + "\"");
         //var col = line.splice(0, arrLines.length + 1);
         var col = line.splice(0, colCount);
         for (var a = 1; a <= colCount; a++) {
@@ -163,8 +172,8 @@ function previewFile() {
             if (typeof col[a - 1] === 'undefined') {
                 val = "";
             } else {
-                val = col[a - 1].split("\"").join("");
-                val = val.replace("\\,", ",");
+                val = col[a - 1].split(",").join("");
+                //val = val.replace("\\,", ",");
             }
 
             if (typeof val === 'undefined' || (val === "" && emptyisnull === 'on')) {
@@ -197,7 +206,7 @@ function previewFile() {
 function uploadFile() {
     try {
         //Query Tabe metadata and get the content type of each column
-        var pstmt = conn.prepareStatement("SELECT * FROM " + schemaname + "." + tablename + " LIMIT 1");
+        var pstmt = conn.prepareStatement('SELECT * FROM "' + schemaname + '"."' + tablename + '" LIMIT 1');
         var rs = pstmt.executeQuery();
         var rsm = rs.getMetaData();
         var colCount = rsm.getColumnCount();
@@ -207,7 +216,7 @@ function uploadFile() {
             var arrLines = contents.split(/\r\n|\n/);
             var placeholder = new Array(colCount + 1).join('?').split('').join(',');
 
-            var insertStmnt = "INSERT INTO " + schemaname + "." + tablename + " VALUES (" + placeholder + ")";
+            var insertStmnt = 'INSERT INTO "' + schemaname + '"."' + tablename + '" VALUES (' + placeholder + ')';
             pstmt = conn.prepareStatement(insertStmnt);
 
             arrLines = checkForBadData(arrLines);
@@ -221,7 +230,7 @@ function uploadFile() {
             }
 
             for (var i = 0; i < arrLines.length; i++) {
-                var line = arrLines[i].split("\",\"");
+                var line = arrLines[i].split(delimeter);
                 //var col = line.splice(0, arrLines.length + 1);
                 var col = line.splice(0, colCount);
                 if (JSON.stringify(arrLines[i]).length > 2) {
@@ -230,8 +239,8 @@ function uploadFile() {
                         if (typeof col[a - 1] === 'undefined') {
                             val = "";
                         } else {
-                            val = col[a - 1].split("\"").join("");
-                            val = val.replace("\\,", ",");
+                            val = col[a - 1].split(delimeter).join("");
+                            //val = val.replace("\\,", ",");
                         }
                         if (typeof val === "undefined" || (val === "" && emptyisnull === "on")  || (val.toLowerCase()  === "null" && emptyisnull === "on")) {
                             pstmt.setNull(a);
